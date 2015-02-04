@@ -79,8 +79,8 @@ class Game
   def how_many_rounds
     begin
       puts "How many rounds would you like to play?"
-      number_of_rounds = gets.chomp
-    end until is_numeric?(number_of_rounds)
+      @number_of_rounds = gets.chomp
+    end until is_numeric?(@number_of_rounds)
   end
 
   def compare_hands
@@ -99,12 +99,12 @@ class Game
 
   def play
     how_many_rounds
-    begin
+    while round_count.to_i != number_of_rounds.to_i do
       player.pick_hand
       computer.pick_hand
       compare_hands
       @round_count += 1
-    end until round_count == number_of_rounds
+    end
     puts""
     puts "You won #{player.wins} game(s)."
     puts "The computer won #{computer.wins} game(s)."
