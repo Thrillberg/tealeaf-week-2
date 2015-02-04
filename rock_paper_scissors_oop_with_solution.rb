@@ -72,11 +72,15 @@ class Game
     @number_of_rounds = 3
   end
 
+  def is_numeric?(obj) 
+    obj.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true
+  end
+
   def how_many_rounds
     begin
       puts "How many rounds would you like to play?"
-      @number_of_rounds = gets.chomp.to_i
-    end until @number_of_rounds.is_a? Integer
+      number_of_rounds = gets.chomp
+    end until is_numeric?(number_of_rounds)
   end
 
   def compare_hands
