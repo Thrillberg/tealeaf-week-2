@@ -8,7 +8,7 @@ class Player
   end
 
   def blackjack?
-    true if total_of_cards == 21
+    total_of_cards == 21
   end
   
   def total_of_cards
@@ -48,13 +48,13 @@ class Player
   end
   
   def busted?
-    true if total_of_cards > 21
+    total_of_cards > 21
   end
   
-  def to_st
+  def to_s
     result = ""
     @hand.each do |card| 
-      result += card.to_st + ", "
+      result += card.to_s + ", "
     end
     result
   end
@@ -82,7 +82,6 @@ end
 class Dealer < Player
   def over_17?
     over_17 = false
-    over_17 = false if total_of_cards <= 17
     over_17 = true if total_of_cards > 17
     over_17
   end
@@ -121,7 +120,7 @@ class Card
     @value = v
   end
  
-  def to_st
+  def to_s
     "the #{value} of #{suit}s"
   end
   
@@ -154,52 +153,51 @@ class Game # the game engine
 
 
   def play_a_round
-    #while play_again == true 
 
     @human = Human.new("Eric")
     @computer = Dealer.new("R2D2")
     @deck = Deck.new
     
       # Human turn
+    @human.hand << @deck.deal_a_card
+    @human.hand << @deck.deal_a_card
+    puts "Your hand is #{@human.to_s}for a total value of #{@human.total_of_cards}."
+    if @human.blackjack?
+      puts "Congratualtions! You hit blackjack!"
+    end
+    while @human.hit? == "y"
       @human.hand << @deck.deal_a_card
-      @human.hand << @deck.deal_a_card
-      puts "Your hand is #{@human.to_st}for a total value of #{@human.total_of_cards}."
-      if @human.blackjack?
-          puts "Congratualtions! You hit blackjack!"
-      end
-      while @human.hit? == "y"
-        @human.hand << @deck.deal_a_card
-        puts "Your hand is #{@human.to_st} for a total value of #{@human.total_of_cards}."
-        if @human.busted?
-          puts "Sorry, you busted!"
-          return
-        end
-      end
-
-      # Computer turn
-      @computer.hand << @deck.deal_a_card
-      @computer.hand << @deck.deal_a_card
-      puts "#{@computer.name} has been dealt two cards."
-      puts "#{@computer.name}'s hand is #{@computer.to_st}for a total value of #{@computer.total_of_cards}."
-    
-      while @computer.over_17? == false
-        @computer.hand << @deck.deal_a_card
-        puts "#{@computer.name} hit and got another card. Now #{@computer.name}'s hand is #{@computer.to_st}."
-        puts "#{@computer.name}'s total is now #{@computer.total_of_cards}."
-      end
-
-      if @computer.busted?
-        puts "Congratulations! #{@computer.name} busted!"
-
-      #Evaluate hands
-      elsif @human.total_of_cards == @computer.total_of_cards
-        puts "It's a tie!"
-      elsif @human.total_of_cards > @computer.total_of_cards
-        puts "Congratulations, you win!"
-      else
-        puts "Sorry, #{@computer.name} won."
+      puts "Your hand is #{@human.to_s} for a total value of #{@human.total_of_cards}."
+      if @human.busted?
+        puts "Sorry, you busted!"
+        return
       end
     end
+
+    # Computer turn
+    @computer.hand << @deck.deal_a_card
+    @computer.hand << @deck.deal_a_card
+    puts "#{@computer.name} has been dealt two cards."
+    puts "#{@computer.name}'s hand is #{@computer.to_s}for a total value of #{@computer.total_of_cards}."
+    
+    while !@computer.over_17?
+      @computer.hand << @deck.deal_a_card
+      puts "#{@computer.name} hit and got another card. Now #{@computer.name}'s hand is #{@computer.to_s}."
+      puts "#{@computer.name}'s total is now #{@computer.total_of_cards}."
+    end
+
+    if @computer.busted?
+      puts "Congratulations! #{@computer.name} busted!"
+
+    #Evaluate hands
+    elsif @human.total_of_cards == @computer.total_of_cards
+      puts "It's a tie!"
+    elsif @human.total_of_cards > @computer.total_of_cards
+      puts "Congratulations, you win!"
+    else
+      puts "Sorry, #{@computer.name} won."
+    end
+  end
 end
 
 Game.new.play
